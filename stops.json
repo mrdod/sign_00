@@ -1,0 +1,117 @@
+{
+  "tripId": 2921,
+  "stops": [
+    {
+      "stop_id": 573,
+      "lat": 44.448725,
+      "lon": -88.059148,
+      "radius": 39.9288,
+      "stop_name": "WISCONSIN an GEORGE"
+    },
+    {
+      "stop_id": 748,
+      "lat": 44.448773,
+      "lon": -88.047769,
+      "radius": 39.9288,
+      "stop_name": "GEORGE an WEBSTER"
+    },
+    {
+      "stop_id": 597,
+      "lat": 44.451395,
+      "lon": -88.044632,
+      "radius": 39.9288,
+      "stop_name": "WEBSTER an RIDGEWAY "
+    },
+    {
+      "stop_id": 565,
+      "lat": 44.44906,
+      "lon": -88.036855,
+      "radius": 39.9288,
+      "stop_name": "RIDGEWAY an LIBAL"
+    },
+    {
+      "stop_id": 199,
+      "lat": 44.460185,
+      "lon": -88.028244,
+      "radius": 39.9288,
+      "stop_name": "LIBAL an HOFFMAN"
+    },
+    {
+      "stop_id": 738,
+      "lat": 44.464509,
+      "lon": -88.025188,
+      "radius": 39.9288,
+      "stop_name": "LIBAL an BROADVIEW"
+    },
+    {
+      "stop_id": 944,
+      "lat": 44.467812,
+      "lon": -88.033067,
+      "radius": 24.384,
+      "stop_name": "BROADVIEW an WEBSTER"
+    },
+    {
+      "stop_id": 671,
+      "lat": 44.472863,
+      "lon": -88.02965,
+      "radius": 39.9288,
+      "stop_name": "WEBSTER an GREENE "
+    },
+    {
+      "stop_id": 349,
+      "lat": 44.480213,
+      "lon": -88.02454,
+      "radius": 39.9288,
+      "stop_name": "WEBSTER an allouez"
+    },
+    {
+      "stop_id": 351,
+      "lat": 44.484986,
+      "lon": -88.021203,
+      "radius": 39.9288,
+      "stop_name": "WEBSTER an ST JOSEPH"
+    },
+    {
+      "stop_id": 350,
+      "lat": 44.487209,
+      "lon": -88.01966,
+      "radius": 39.9288,
+      "stop_name": "Pre-vea Health Center "
+    },
+    {
+      "stop_id": 78,
+      "lat": 44.499961,
+      "lon": -88.01189,
+      "radius": 39.9288,
+      "stop_name": "WEBSTER an porlierr"
+    },
+    {
+      "stop_id": 686,
+      "lat": 44.503881,
+      "lon": -88.009104,
+      "radius": 39.9288,
+      "stop_name": "Please inform the bus driver of any transfers you may need  "
+    },
+    {
+      "stop_id": 687,
+      "lat": 44.506585,
+      "lon": -88.007316,
+      "radius": 39.9288,
+      "stop_name": "WEBSTER an CROOKS "
+    },
+    {
+      "stop_id": 689,
+      "lat": 44.510151,
+      "lon": -88.0048,
+      "radius": 39.9288,
+      "stop_name": "WEBSTER an WALNUT "
+    },
+    {
+      "stop_id": 729,
+      "lat": 44.512624,
+      "lon": -88.003081,
+      "radius": 39.9288,
+      "stop_name": "We will be arriving at Metro shortly,--------- for your safety please do not run on the Transit way.  Please inform the driver if you need to transfer to another bus----------------------------------- Drivers will do their best to ensure transfers are made."
+    }
+  ]
+}
