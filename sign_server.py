@@ -3,7 +3,8 @@ from multiprocessing.connection import Listener
 import os
 import threading
 
-message_output_stop_thread_flg = False
+message_output_thread_count = 0
+
 
 # Clear the Console
 def clear():
@@ -11,8 +12,8 @@ def clear():
 
 
 def message_output(input_msg):
-    global message_output_stop_thread_flg
-    message_output_stop_thread_flg = False
+    global message_output_thread_count
+    local_thread_number = message_output_thread_count
 
     clear()
     des_message_input = input_msg.upper()
@@ -44,8 +45,6 @@ def message_output(input_msg):
     message_length = len(temp_console_output[0])
 
     for z in range(2):
-        if message_output_stop_thread_flg:
-            break
 
         proc_console_lines = []
         proc_console_output = ""
@@ -62,14 +61,15 @@ def message_output(input_msg):
             for x in range(message_length):
                 proc_console_lines = []
                 proc_console_output = ""
-                time.sleep(0.05)
                 for y in range(sign_line_height):
                     proc_console_lines.append(temp_console_output[y][x:sign_line_max_disp_length + x])
                     proc_console_output += proc_console_lines[y] + "\n"
 
-                    if message_output_stop_thread_flg:
+                    if local_thread_number != message_output_thread_count:
                         return
 
+                clear()
+                time.sleep(0.1)
                 print(proc_console_output)
 
 
@@ -127,8 +127,7 @@ while True:
         listener = Listener(address, authkey=b'1234')
         conn = listener.accept()
     else:
-        message_output_stop_thread_flg = True
-        time.sleep(0.2)
+        message_output_thread_count += 1
         message_output_thread.start()
 
 print("Finshed!")
