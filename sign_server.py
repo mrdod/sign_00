@@ -12,6 +12,22 @@ def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
+# Watch for incoming message while we are waiting
+def sign_server_time(input_time):
+    global message_output_thread_count
+    local_thread_number = message_output_thread_count
+
+    calculated_time = input_time / 0.1
+
+    for a in range(int(calculated_time)):
+        if local_thread_number != message_output_thread_count:
+            return True
+        time.sleep(0.1)
+
+    return False
+
+
+# Console Writing Function
 def message_output(input_msg, input_scrolling_active):
     global message_output_thread_count
     local_thread_number = message_output_thread_count
@@ -59,15 +75,11 @@ def message_output(input_msg, input_scrolling_active):
         # Wait some time before cycling the message if longer than the screen length.
         # Exit if we get another message request
         if input_scrolling_active:
-            for a in range(8):
-                if local_thread_number != message_output_thread_count:
-                    return
-                time.sleep(0.25)
+            if sign_server_time(2):
+                return
         else:
-            for a in range(4):
-                if local_thread_number != message_output_thread_count:
-                    return
-                time.sleep(0.25)
+            if sign_server_time(1):
+                return
 
         # Check to see if message is longer than the width of the sign
         if message_length > sign_line_max_disp_length:
@@ -110,10 +122,8 @@ def message_output(input_msg, input_scrolling_active):
                     print(proc_console_output)
 
                     # Exit if we get another message request
-                    for a in range(8):
-                        if local_thread_number != message_output_thread_count:
-                            return
-                        time.sleep(0.25)
+                    if sign_server_time(2):
+                        return
 
 
 file = open("letters.txt", "r")
@@ -181,6 +191,7 @@ while True:
 
     message_output_thread = threading.Thread(target=message_output, args=(msg, scrolling_active,))
 
+    # If we get the close command from client, close the connection and open a new listener
     if msg == 'close':
         conn.close()
         listener.close()
