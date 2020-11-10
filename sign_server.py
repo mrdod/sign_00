@@ -4,6 +4,7 @@ import os
 import threading
 
 message_output_thread_count = 0
+scrolling_active = True
 
 
 # Clear the Console
@@ -11,7 +12,7 @@ def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def message_output(input_msg):
+def message_output(input_msg, input_scrolling_active):
     global message_output_thread_count
     local_thread_number = message_output_thread_count
 
@@ -48,34 +49,72 @@ def message_output(input_msg):
 
         proc_console_lines = []
         proc_console_output = ""
+
         # Trim initial message to sign width
         for y in range(sign_line_height):
             proc_console_lines.append(temp_console_output[y][0:sign_line_max_disp_length])
             proc_console_output += proc_console_lines[y] + "\n"
         print(proc_console_output)
-        time.sleep(3)
+
+        # Wait some time before cycling the message if longer than the screen length.
+        # Exit if we get another message request
+        if input_scrolling_active:
+            for a in range(8):
+                if local_thread_number != message_output_thread_count:
+                    return
+                time.sleep(0.25)
+        else:
+            for a in range(4):
+                if local_thread_number != message_output_thread_count:
+                    return
+                time.sleep(0.25)
 
         # Check to see if message is longer than the width of the sign
         if message_length > sign_line_max_disp_length:
-            # Scroll through until whole message is output
-            for x in range(message_length):
-                proc_console_lines = []
-                proc_console_output = ""
-                for y in range(sign_line_height):
-                    proc_console_lines.append(temp_console_output[y][x:sign_line_max_disp_length + x])
-                    proc_console_output += proc_console_lines[y] + "\n"
+            #
+            # Scrolling Mode
+            #
+            if input_scrolling_active:
+                for x in range(message_length):
+                    proc_console_lines = []
+                    proc_console_output = ""
 
-                    if local_thread_number != message_output_thread_count:
-                        return
+                    # Cycle through the message until all is seen
+                    for y in range(sign_line_height):
+                        proc_console_lines.append(temp_console_output[y][x:sign_line_max_disp_length + x])
+                        proc_console_output += proc_console_lines[y] + "\n"
 
-                clear()
-                time.sleep(0.1)
-                print(proc_console_output)
+                        # Exit if we get another message request
+                        if local_thread_number != message_output_thread_count:
+                            return
 
+                    clear()
+                    time.sleep(0.1)
+                    print(proc_console_output)
+            #
+            # Non Scrolling Mode
+            #
+            else:
+                x = 0
+                while x < message_length:
+                    proc_console_lines = []
+                    proc_console_output = ""
 
-address = ('localhost', 5000)
-listener = Listener(address, authkey=b'1234')
-conn = listener.accept()
+                    # Cycle through the message until all is seen
+                    for y in range(sign_line_height):
+                        proc_console_lines.append(temp_console_output[y][x:sign_line_max_disp_length + x])
+                        proc_console_output += proc_console_lines[y] + "\n"
+
+                    x += sign_line_max_disp_length
+                    clear()
+                    print(proc_console_output)
+
+                    # Exit if we get another message request
+                    for a in range(8):
+                        if local_thread_number != message_output_thread_count:
+                            return
+                        time.sleep(0.25)
+
 
 file = open("letters.txt", "r")
 
@@ -106,10 +145,33 @@ for index in key:
 
 file.close()
 
-#
-# Print Desired Text
-#
 
+#
+# User Configuration
+#
+print("1 = default sign (7x128) no scroll\n"
+      "2 = default sign (7x128) scroll\n" )
+
+input_config = input("Choose your desired mode:")
+
+if input_config == "1":
+    scrolling_active = False
+    print("1 = default sign (7x128) no scroll\n")
+else:  # 2
+    scrolling_active = True
+    print("2 = default sign (7x128) scroll\n")
+
+
+#
+# Setup First Connection
+#
+address = ('localhost', 5000)
+listener = Listener(address, authkey=b'1234')
+conn = listener.accept()
+
+#
+# Main Loop, waiting for desired input from client
+#
 while True:
 
     try:
@@ -117,7 +179,7 @@ while True:
     except:
         print("Error receiving message from client")
 
-    message_output_thread = threading.Thread(target=message_output, args=(msg,))
+    message_output_thread = threading.Thread(target=message_output, args=(msg, scrolling_active,))
 
     if msg == 'close':
         conn.close()
@@ -127,7 +189,6 @@ while True:
         listener = Listener(address, authkey=b'1234')
         conn = listener.accept()
     else:
+        # Keep track of incoming messages so we know if console writing thread is getting out of sync
         message_output_thread_count += 1
         message_output_thread.start()
-
-print("Finshed!")
